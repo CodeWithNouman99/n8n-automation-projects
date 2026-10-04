@@ -1,0 +1,1358 @@
+{
+  "name": "Client Onboarding Automation",
+  "nodes": [
+    {
+      "parameters": {
+        "resource": "channel",
+        "channelId": "={{ $('Google Sheets Trigger').item.json['Client Name'].toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') }}-{{ $now.format('MMdd-HHmm') }}"
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.7,
+      "position": [
+        1360,
+        0
+      ],
+      "id": "7eaf2d12-6714-498e-88ba-4719a3587542",
+      "name": "Create a channel",
+      "webhookId": "6e52cb77-cfb4-45e1-9d08-eaf14afbfcaf",
+      "credentials": {
+        "slackApi": {
+          "id": "wXva78ml9HEYWPRL",
+          "name": "Slack account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "={{ $json.name }}",
+          "mode": "id"
+        },
+        "text": "=    Welcome to the project channel!        Team members to add: {{ $('Google Sheets Trigger').item.json['Team Members (emails, comma separated)'] }}        Project: {{ $('Google Sheets Trigger').item.json['Project Description'] }}",
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.7,
+      "position": [
+        1584,
+        0
+      ],
+      "id": "5cac77d5-3195-4ddb-8375-3355e417ead9",
+      "name": "Send a message",
+      "webhookId": "d602ab5d-a1db-4897-92a2-187f89b9393d",
+      "credentials": {
+        "slackApi": {
+          "id": "wXva78ml9HEYWPRL",
+          "name": "Slack account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "=   {{ $('Google Sheets Trigger').item.json['Client Email'] }}",
+        "subject": "=   Welcome to Your New Project, {{ $('Google Sheets Trigger').item.json['Client Name'] }}!",
+        "message": "=<div style=\"font-family: -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif; max-width: 560px; margin: 0 auto; background: #ffffff; border: 1px solid #eaeaea;\">\n\n  <!-- Header -->\n  <div style=\"padding: 40px 40px 24px 40px; border-bottom: 1px solid #f0f0f0;\">\n    <p style=\"margin: 0; font-size: 13px; font-weight: 600; letter-spacing: 1.5px; color: #6b6b6b; text-transform: uppercase;\">Team Foundry</p>\n  </div>\n\n  <!-- Body -->\n  <div style=\"padding: 36px 40px;\">\n    <h1 style=\"margin: 0 0 16px 0; font-size: 22px; font-weight: 600; color: #111111;\">Welcome, {{ $('Google Sheets Trigger').item.json['Client Name'] }}</h1>\n\n    <p style=\"margin: 0 0 28px 0; font-size: 15px; line-height: 1.7; color: #4a4a4a;\">\n      Thanks for choosing us. Your project has been set up and our team is ready to get started.\n    </p>\n\n    <!-- Details -->\n    <div style=\"border-left: 2px solid #111111; padding-left: 20px; margin-bottom: 28px;\">\n      <p style=\"margin: 0 0 12px 0; font-size: 13px; color: #999999;\">PROJECT TYPE</p>\n      <p style=\"margin: 0 0 20px 0; font-size: 15px; font-weight: 600; color: #111111;\">{{ $('Google Sheets Trigger').item.json['project Type'] }}</p>\n\n      <p style=\"margin: 0 0 12px 0; font-size: 13px; color: #999999;\">DESCRIPTION</p>\n      <p style=\"margin: 0; font-size: 15px; font-weight: 600; color: #111111;\">{{ $('Google Sheets Trigger').item.json['Project Description'] }}</p>\n    </div>\n\n    <p style=\"margin: 0 0 12px 0; font-size: 13px; font-weight: 600; color: #111111; text-transform: uppercase; letter-spacing: 0.5px;\">What happens next</p>\n    <table style=\"width: 100%; border-collapse: collapse; margin-bottom: 28px;\">\n      <tr>\n        <td style=\"padding: 8px 0; font-size: 14px; color: #4a4a4a; vertical-align: top; width: 20px;\">01</td>\n        <td style=\"padding: 8px 0; font-size: 14px; color: #4a4a4a;\">Your project workspace is live</td>\n      </tr>\n      <tr>\n        <td style=\"padding: 8px 0; font-size: 14px; color: #4a4a4a; vertical-align: top;\">02</td>\n        <td style=\"padding: 8px 0; font-size: 14px; color: #4a4a4a;\">A dedicated team channel has been created</td>\n      </tr>\n      <tr>\n        <td style=\"padding: 8px 0; font-size: 14px; color: #4a4a4a; vertical-align: top;\">03</td>\n        <td style=\"padding: 8px 0; font-size: 14px; color: #4a4a4a;\">We'll reach out shortly to schedule your kickoff call</td>\n      </tr>\n    </table>\n\n    <p style=\"margin: 0; font-size: 15px; line-height: 1.7; color: #4a4a4a;\">\n      Questions in the meantime? Just reply to this email — we're happy to help.\n    </p>\n  </div>\n\n  <!-- Signature -->\n  <div style=\"padding: 0 40px 36px 40px;\">\n    <p style=\"margin: 0; font-size: 15px; color: #111111;\">Best regards,</p>\n    <p style=\"margin: 4px 0 0 0; font-size: 15px; font-weight: 600; color: #111111;\">The Team Foundry</p>\n  </div>\n\n  <!-- Footer -->\n  <div style=\"padding: 20px 40px; background: #fafafa; border-top: 1px solid #f0f0f0;\">\n    <p style=\"margin: 0; font-size: 12px; color: #a0a0a0;\">© 2026 Team Foundry. All rights reserved.</p>\n  </div>\n\n</div>",
+        "options": {
+          "appendAttribution": false,
+          "senderName": "Team Foundary"
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1808,
+        0
+      ],
+      "id": "1c302c64-9670-407d-ac35-211d0b72c5ae",
+      "name": "Send a message1",
+      "webhookId": "86f102b1-3bbb-4cb4-a405-5efba9c03172",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "hHRgxbtzUcTNQGfX",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json['Project Type'] }}",
+                    "rightValue": "=Web",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    },
+                    "id": "8f15ede4-e316-42c9-8fb6-2553b0a10476"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Web Development"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "55ce73d4-4e05-4f37-a3af-febe64e95cc4",
+                    "leftValue": "={{ $json['Project Type'] }}",
+                    "rightValue": "=Mobile",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Mobile"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "5bab9277-11c9-4f81-90a7-7b82edbcfc8c",
+                    "leftValue": "={{ $json['Project Type'] }}",
+                    "rightValue": "Automation",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Automation"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        240,
+        176
+      ],
+      "id": "9564bc68-6eb5-456c-9cd1-739f3a9e3d01",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "calendar": {
+          "__rl": true,
+          "value": "mrnoumannomi7@gmail.com",
+          "mode": "list",
+          "cachedResultName": "mrnoumannomi7@gmail.com"
+        },
+        "start": "=   {{ $now.plus({ days: 1 }).set({ hour: 11, minute: 0 }).toISO() }}",
+        "end": "=   {{ $now.plus({ days: 1 }).set({ hour: 11, minute: 30 }).toISO() }}",
+        "additionalFields": {
+          "attendees": [
+            "=   {{ $('Google Sheets Trigger').item.json['Client Email'] }}"
+          ],
+          "summary": "=   Kickoff Call — {{ $('Google Sheets Trigger').item.json['Client Name'] }}"
+        }
+      },
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.3,
+      "position": [
+        2032,
+        0
+      ],
+      "id": "836fb41f-92e9-41c2-b3f3-3012a58cc6e9",
+      "name": "Create an event",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "AkGUTRYmg0RDBYM8",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "channel",
+        "channelId": "={{ $('Google Sheets Trigger').item.json['Client Name'].toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') }}-{{ $now.format('MMdd-HHmm') }}"
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.7,
+      "position": [
+        1360,
+        192
+      ],
+      "id": "4402b4bf-0c5b-4d87-ad54-075739837af6",
+      "name": "Create a channel1",
+      "webhookId": "6e52cb77-cfb4-45e1-9d08-eaf14afbfcaf",
+      "credentials": {
+        "slackApi": {
+          "id": "wXva78ml9HEYWPRL",
+          "name": "Slack account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "={{ $json.name }}",
+          "mode": "id"
+        },
+        "text": "=    Welcome to the project channel!        Team members to add: {{ $('Google Sheets Trigger').item.json['Team Members (emails, comma separated)'] }}        Project: {{ $('Google Sheets Trigger').item.json['Project Description'] }}",
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.7,
+      "position": [
+        1584,
+        192
+      ],
+      "id": "b42fb0b6-7cb0-422f-b0a9-a6b7ae7034a2",
+      "name": "Send a message2",
+      "webhookId": "d602ab5d-a1db-4897-92a2-187f89b9393d",
+      "credentials": {
+        "slackApi": {
+          "id": "wXva78ml9HEYWPRL",
+          "name": "Slack account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "=   {{ $('Google Sheets Trigger').item.json['Client Email'] }}",
+        "subject": "=   Welcome to Your New Project, {{ $('Google Sheets Trigger').item.json['Client Name'] }}!",
+        "message": "=<div style=\"font-family: -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif; max-width: 560px; margin: 0 auto; background: #ffffff; border: 1px solid #eaeaea;\">\n\n  <!-- Header -->\n  <div style=\"padding: 40px 40px 24px 40px; border-bottom: 1px solid #f0f0f0;\">\n    <p style=\"margin: 0; font-size: 13px; font-weight: 600; letter-spacing: 1.5px; color: #6b6b6b; text-transform: uppercase;\">Team Foundry</p>\n  </div>\n\n  <!-- Body -->\n  <div style=\"padding: 36px 40px;\">\n    <h1 style=\"margin: 0 0 16px 0; font-size: 22px; font-weight: 600; color: #111111;\">Welcome, {{ $('Google Sheets Trigger').item.json['Client Name'] }}</h1>\n\n    <p style=\"margin: 0 0 28px 0; font-size: 15px; line-height: 1.7; color: #4a4a4a;\">\n      Thanks for choosing us. Your project has been set up and our team is ready to get started.\n    </p>\n\n    <!-- Details -->\n    <div style=\"border-left: 2px solid #111111; padding-left: 20px; margin-bottom: 28px;\">\n      <p style=\"margin: 0 0 12px 0; font-size: 13px; color: #999999;\">PROJECT TYPE</p>\n      <p style=\"margin: 0 0 20px 0; font-size: 15px; font-weight: 600; color: #111111;\">{{ $('Google Sheets Trigger').item.json['project Type'] }}</p>\n\n      <p style=\"margin: 0 0 12px 0; font-size: 13px; color: #999999;\">DESCRIPTION</p>\n      <p style=\"margin: 0; font-size: 15px; font-weight: 600; color: #111111;\">{{ $('Google Sheets Trigger').item.json['Project Description'] }}</p>\n    </div>\n\n    <p style=\"margin: 0 0 12px 0; font-size: 13px; font-weight: 600; color: #111111; text-transform: uppercase; letter-spacing: 0.5px;\">What happens next</p>\n    <table style=\"width: 100%; border-collapse: collapse; margin-bottom: 28px;\">\n      <tr>\n        <td style=\"padding: 8px 0; font-size: 14px; color: #4a4a4a; vertical-align: top; width: 20px;\">01</td>\n        <td style=\"padding: 8px 0; font-size: 14px; color: #4a4a4a;\">Your project workspace is live</td>\n      </tr>\n      <tr>\n        <td style=\"padding: 8px 0; font-size: 14px; color: #4a4a4a; vertical-align: top;\">02</td>\n        <td style=\"padding: 8px 0; font-size: 14px; color: #4a4a4a;\">A dedicated team channel has been created</td>\n      </tr>\n      <tr>\n        <td style=\"padding: 8px 0; font-size: 14px; color: #4a4a4a; vertical-align: top;\">03</td>\n        <td style=\"padding: 8px 0; font-size: 14px; color: #4a4a4a;\">We'll reach out shortly to schedule your kickoff call</td>\n      </tr>\n    </table>\n\n    <p style=\"margin: 0; font-size: 15px; line-height: 1.7; color: #4a4a4a;\">\n      Questions in the meantime? Just reply to this email — we're happy to help.\n    </p>\n  </div>\n\n  <!-- Signature -->\n  <div style=\"padding: 0 40px 36px 40px;\">\n    <p style=\"margin: 0; font-size: 15px; color: #111111;\">Best regards,</p>\n    <p style=\"margin: 4px 0 0 0; font-size: 15px; font-weight: 600; color: #111111;\">The Team Foundry</p>\n  </div>\n\n  <!-- Footer -->\n  <div style=\"padding: 20px 40px; background: #fafafa; border-top: 1px solid #f0f0f0;\">\n    <p style=\"margin: 0; font-size: 12px; color: #a0a0a0;\">© 2026 Team Foundry. All rights reserved.</p>\n  </div>\n\n</div>",
+        "options": {
+          "appendAttribution": false,
+          "senderName": "Team Foundary"
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1808,
+        192
+      ],
+      "id": "be069262-ceff-4132-b3d0-66846e458858",
+      "name": "Send a message3",
+      "webhookId": "86f102b1-3bbb-4cb4-a405-5efba9c03172",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "hHRgxbtzUcTNQGfX",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "calendar": {
+          "__rl": true,
+          "value": "mrnoumannomi7@gmail.com",
+          "mode": "list",
+          "cachedResultName": "mrnoumannomi7@gmail.com"
+        },
+        "start": "=   {{ $now.plus({ days: 1 }).set({ hour: 11, minute: 0 }).toISO() }}",
+        "end": "=   {{ $now.plus({ days: 1 }).set({ hour: 11, minute: 30 }).toISO() }}",
+        "additionalFields": {
+          "attendees": [
+            "=   {{ $('Google Sheets Trigger').item.json['Client Email'] }}"
+          ],
+          "summary": "=   Kickoff Call — {{ $('Google Sheets Trigger').item.json['Client Name'] }}"
+        }
+      },
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.3,
+      "position": [
+        2032,
+        192
+      ],
+      "id": "9ba74373-c5bd-4e7b-bc4a-506e72d9fc06",
+      "name": "Create an event1",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "AkGUTRYmg0RDBYM8",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "channel",
+        "channelId": "={{ $('Google Sheets Trigger').item.json['Client Name'].toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') }}-{{ $now.format('MMdd-HHmm') }}"
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.7,
+      "position": [
+        1360,
+        384
+      ],
+      "id": "d2007da2-a853-48f1-84df-4cecd1afc8f3",
+      "name": "Create a channel2",
+      "webhookId": "6e52cb77-cfb4-45e1-9d08-eaf14afbfcaf",
+      "credentials": {
+        "slackApi": {
+          "id": "wXva78ml9HEYWPRL",
+          "name": "Slack account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "={{ $json.name }}",
+          "mode": "id"
+        },
+        "text": "=    Welcome to the project channel!        Team members to add: {{ $('Google Sheets Trigger').item.json['Team Members (emails, comma separated)'] }}        Project: {{ $('Google Sheets Trigger').item.json['Project Description'] }}",
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.7,
+      "position": [
+        1584,
+        384
+      ],
+      "id": "e3112a1c-f6a5-4320-99b4-0cb41671836d",
+      "name": "Send a message4",
+      "webhookId": "d602ab5d-a1db-4897-92a2-187f89b9393d",
+      "credentials": {
+        "slackApi": {
+          "id": "wXva78ml9HEYWPRL",
+          "name": "Slack account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "=   {{ $('Google Sheets Trigger').item.json['Client Email'] }}",
+        "subject": "=   Welcome to Your New Project, {{ $('Google Sheets Trigger').item.json['Client Name'] }}!",
+        "message": "=<div style=\"font-family: -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif; max-width: 560px; margin: 0 auto; background: #ffffff; border: 1px solid #eaeaea;\">\n\n  <!-- Header -->\n  <div style=\"padding: 40px 40px 24px 40px; border-bottom: 1px solid #f0f0f0;\">\n    <p style=\"margin: 0; font-size: 13px; font-weight: 600; letter-spacing: 1.5px; color: #6b6b6b; text-transform: uppercase;\">Team Foundry</p>\n  </div>\n\n  <!-- Body -->\n  <div style=\"padding: 36px 40px;\">\n    <h1 style=\"margin: 0 0 16px 0; font-size: 22px; font-weight: 600; color: #111111;\">Welcome, {{ $('Google Sheets Trigger').item.json['Client Name'] }}</h1>\n\n    <p style=\"margin: 0 0 28px 0; font-size: 15px; line-height: 1.7; color: #4a4a4a;\">\n      Thanks for choosing us. Your project has been set up and our team is ready to get started.\n    </p>\n\n    <!-- Details -->\n    <div style=\"border-left: 2px solid #111111; padding-left: 20px; margin-bottom: 28px;\">\n      <p style=\"margin: 0 0 12px 0; font-size: 13px; color: #999999;\">PROJECT TYPE</p>\n      <p style=\"margin: 0 0 20px 0; font-size: 15px; font-weight: 600; color: #111111;\">{{ $('Google Sheets Trigger').item.json['project Type'] }}</p>\n\n      <p style=\"margin: 0 0 12px 0; font-size: 13px; color: #999999;\">DESCRIPTION</p>\n      <p style=\"margin: 0; font-size: 15px; font-weight: 600; color: #111111;\">{{ $('Google Sheets Trigger').item.json['Project Description'] }}</p>\n    </div>\n\n    <p style=\"margin: 0 0 12px 0; font-size: 13px; font-weight: 600; color: #111111; text-transform: uppercase; letter-spacing: 0.5px;\">What happens next</p>\n    <table style=\"width: 100%; border-collapse: collapse; margin-bottom: 28px;\">\n      <tr>\n        <td style=\"padding: 8px 0; font-size: 14px; color: #4a4a4a; vertical-align: top; width: 20px;\">01</td>\n        <td style=\"padding: 8px 0; font-size: 14px; color: #4a4a4a;\">Your project workspace is live</td>\n      </tr>\n      <tr>\n        <td style=\"padding: 8px 0; font-size: 14px; color: #4a4a4a; vertical-align: top;\">02</td>\n        <td style=\"padding: 8px 0; font-size: 14px; color: #4a4a4a;\">A dedicated team channel has been created</td>\n      </tr>\n      <tr>\n        <td style=\"padding: 8px 0; font-size: 14px; color: #4a4a4a; vertical-align: top;\">03</td>\n        <td style=\"padding: 8px 0; font-size: 14px; color: #4a4a4a;\">We'll reach out shortly to schedule your kickoff call</td>\n      </tr>\n    </table>\n\n    <p style=\"margin: 0; font-size: 15px; line-height: 1.7; color: #4a4a4a;\">\n      Questions in the meantime? Just reply to this email — we're happy to help.\n    </p>\n  </div>\n\n  <!-- Signature -->\n  <div style=\"padding: 0 40px 36px 40px;\">\n    <p style=\"margin: 0; font-size: 15px; color: #111111;\">Best regards,</p>\n    <p style=\"margin: 4px 0 0 0; font-size: 15px; font-weight: 600; color: #111111;\">The Team Foundry</p>\n  </div>\n\n  <!-- Footer -->\n  <div style=\"padding: 20px 40px; background: #fafafa; border-top: 1px solid #f0f0f0;\">\n    <p style=\"margin: 0; font-size: 12px; color: #a0a0a0;\">© 2026 Team Foundry. All rights reserved.</p>\n  </div>\n\n</div>",
+        "options": {
+          "appendAttribution": false,
+          "senderName": "Team Foundary"
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1808,
+        384
+      ],
+      "id": "1940363e-b68c-4260-9894-d2e9a8e3cf6d",
+      "name": "Send a message5",
+      "webhookId": "86f102b1-3bbb-4cb4-a405-5efba9c03172",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "hHRgxbtzUcTNQGfX",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "calendar": {
+          "__rl": true,
+          "value": "mrnoumannomi7@gmail.com",
+          "mode": "list",
+          "cachedResultName": "mrnoumannomi7@gmail.com"
+        },
+        "start": "=   {{ $now.plus({ days: 1 }).set({ hour: 11, minute: 0 }).toISO() }}",
+        "end": "=   {{ $now.plus({ days: 1 }).set({ hour: 11, minute: 30 }).toISO() }}",
+        "additionalFields": {
+          "attendees": [
+            "=   {{ $('Google Sheets Trigger').item.json['Client Email'] }}"
+          ],
+          "summary": "=   Kickoff Call — {{ $('Google Sheets Trigger').item.json['Client Name'] }}"
+        }
+      },
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.3,
+      "position": [
+        2032,
+        384
+      ],
+      "id": "70117838-e10b-4f6e-a420-58f7e03c726f",
+      "name": "Create an event2",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "AkGUTRYmg0RDBYM8",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "name": "=   {{ $json['Client Name'] }}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "root",
+          "cachedResultName": "/ (Root folder)"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        464,
+        0
+      ],
+      "id": "6fb3d326-7676-4df1-86eb-e0d06dc3d826",
+      "name": "Web - Create folder",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "aCoZKqyTfzDvckXW",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "name": "Contracts",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "root",
+          "mode": "list",
+          "cachedResultName": "/ (Root folder)",
+          "cachedResultUrl": "https://drive.google.com/drive"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        464,
+        192
+      ],
+      "id": "613ce2b9-c591-4741-9faf-1450e1dea26c",
+      "name": "Mobile - Create folder1",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "aCoZKqyTfzDvckXW",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "name": "=  {{ $json['Client Name'] }}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "root",
+          "mode": "list",
+          "cachedResultName": "/ (Root folder)",
+          "cachedResultUrl": "https://drive.google.com/drive"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        464,
+        384
+      ],
+      "id": "23318751-f312-4434-b715-e7b1f832013f",
+      "name": "Automation - Create folder2",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "aCoZKqyTfzDvckXW",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "client-onboarding",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -432,
+        192
+      ],
+      "id": "1d4416e9-e4d2-461d-90d3-624db5c38f41",
+      "name": "client-onboarding",
+      "webhookId": "57f0a95e-351b-4e60-ab2e-f5aa4157e438"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "70636b1b-c224-407f-be89-b3fddcc2b486",
+              "name": "Client Name",
+              "value": "=   {{ $json.body.clientName }}",
+              "type": "string"
+            },
+            {
+              "id": "b3ff7d94-aa55-4d66-9f01-5571d14a0855",
+              "name": "Client Email",
+              "value": "={{ $json.body.clientEmail }}",
+              "type": "string"
+            },
+            {
+              "id": "627999d0-06ba-4202-8dc1-5cccdf70cad8",
+              "name": "project Type",
+              "value": "={{ $json.body.projectType }}",
+              "type": "string"
+            },
+            {
+              "id": "2a60e31c-b002-4c4d-8865-565cf619d076",
+              "name": "Team Members (emails, comma separated)",
+              "value": "={{ $json.body.teamMembers }}",
+              "type": "string"
+            },
+            {
+              "id": "a2a97c63-4e77-4500-8e4d-65509f2211c4",
+              "name": "Project Description",
+              "value": "={{ $json.body.projectDescription }}",
+              "type": "string"
+            },
+            {
+              "id": "97a0ac81-4d90-4fd3-95b6-3ab52e11155d",
+              "name": "Client WhatsApp Number",
+              "value": "={{ $json.body.whatsappNumber }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        -208,
+        192
+      ],
+      "id": "d8348aea-363f-4ee3-a6e4-1135c13aa579",
+      "name": "Google Sheets Trigger"
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "name": "Contracts",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $('Web - Create folder').item.json.id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        688,
+        0
+      ],
+      "id": "82d6dc88-bd92-4b06-b3ee-7437623c98cd",
+      "name": "Contracts",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "aCoZKqyTfzDvckXW",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "name": "Deliverables",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $node[\"Web - Create folder\"].json[\"id\"] }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        912,
+        0
+      ],
+      "id": "e1f4a892-92d1-4dcf-9d0e-7e84040711f8",
+      "name": "Deliverables",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "aCoZKqyTfzDvckXW",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "name": "Meeting Notes",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $node[\"Web - Create folder\"].json[\"id\"] }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1136,
+        0
+      ],
+      "id": "7bce1d68-b449-4ebb-b177-cd87d4fb9f88",
+      "name": "Meeting Notes",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "aCoZKqyTfzDvckXW",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "name": "Deliverables",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1RiumH59BHdE0xA6QjlEbt2F9b-EEEm2_",
+          "mode": "list",
+          "cachedResultName": "   Ali Traders",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1RiumH59BHdE0xA6QjlEbt2F9b-EEEm2_"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        688,
+        192
+      ],
+      "id": "99b20218-bb34-40c8-821b-816382b8861f",
+      "name": "Contracts1",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "aCoZKqyTfzDvckXW",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "name": "Meeting Notes",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1RiumH59BHdE0xA6QjlEbt2F9b-EEEm2_",
+          "mode": "list",
+          "cachedResultName": "   Ali Traders",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1RiumH59BHdE0xA6QjlEbt2F9b-EEEm2_"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        912,
+        192
+      ],
+      "id": "77f21168-9777-4a3b-8c9e-52cd25f3d214",
+      "name": "Deliverables1",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "aCoZKqyTfzDvckXW",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "name": "Contracts",
+        "driveId": {
+          "__rl": true,
+          "value": "My Drive",
+          "mode": "list",
+          "cachedResultName": "My Drive",
+          "cachedResultUrl": "https://drive.google.com/drive/my-drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $('Automation - Create folder2').item.json['id'] }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        688,
+        384
+      ],
+      "id": "c6aa9b0a-5b3c-4d5c-8255-2f6951a88d22",
+      "name": "Contracts2",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "aCoZKqyTfzDvckXW",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "name": "Deliverables",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $('Automation - Create folder2').item.json['id'] }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        912,
+        384
+      ],
+      "id": "dc349089-0961-4ad2-94e0-ea3ec53af3ba",
+      "name": "Deliverables2",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "aCoZKqyTfzDvckXW",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "name": "Meeting Notes",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $('Mobile - Create folder1').item.json.id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1136,
+        192
+      ],
+      "id": "a48868b4-f67b-41be-83d9-2f131bc7895e",
+      "name": "Meeting Notes1",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "aCoZKqyTfzDvckXW",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "name": "Meeting Notes",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $('Automation - Create folder2').item.json['id'] }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1136,
+        384
+      ],
+      "id": "78e861c0-e8fd-445f-b03c-254453c3b988",
+      "name": "Meeting Notes2",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "aCoZKqyTfzDvckXW",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1AIHamEZZAxNyD9hc99rmgV5WDeJ8mDS85W-EVKUyupE",
+          "mode": "list",
+          "cachedResultName": "Client Log",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1AIHamEZZAxNyD9hc99rmgV5WDeJ8mDS85W-EVKUyupE/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1AIHamEZZAxNyD9hc99rmgV5WDeJ8mDS85W-EVKUyupE/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Timestamp": "={{ $now.toISO() }}",
+            "Client Name": "={{ $json['Client Name'] }}",
+            "Client Email": "={{ $json['Client Email'] }}",
+            "WhatsApp Number": "={{ $json['Client WhatsApp Number'] }}",
+            "Project Type": "={{ $json['project Type'] }}",
+            "Team Members ": "={{ $json['Team Members (emails, comma separated)'] }}",
+            "Project Description": "={{ $json['Project Description'] }}",
+            "Status": "Onboarded"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Client Name",
+              "displayName": "Client Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Client Email",
+              "displayName": "Client Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "WhatsApp Number",
+              "displayName": "WhatsApp Number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Project Type",
+              "displayName": "Project Type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Team Members ",
+              "displayName": "Team Members ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Project Description",
+              "displayName": "Project Description",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        16,
+        192
+      ],
+      "id": "c5945086-639a-4e4c-bc6e-e972cfb6d6e3",
+      "name": "Log to Client Sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "o3AGJPLE7Hbdq6JL",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "path": "dashboard-data",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        1616,
+        1712
+      ],
+      "id": "c72559cc-9f16-43dc-a6bc-6563d551d3c8",
+      "name": "Webhook",
+      "webhookId": "90327987-4815-4fe3-8a07-15b69db1f2fc"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1AIHamEZZAxNyD9hc99rmgV5WDeJ8mDS85W-EVKUyupE",
+          "mode": "list",
+          "cachedResultName": "Client Log",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1AIHamEZZAxNyD9hc99rmgV5WDeJ8mDS85W-EVKUyupE/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1AIHamEZZAxNyD9hc99rmgV5WDeJ8mDS85W-EVKUyupE/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": []
+        },
+        "options": {
+          "returnFirstMatch": false
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1776,
+        1696
+      ],
+      "id": "1a6eb3ae-8135-4bec-9928-93da87983b21",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "o3AGJPLE7Hbdq6JL",
+          "name": "Google Sheets account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Create a channel": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message": {
+      "main": [
+        [
+          {
+            "node": "Send a message1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Web - Create folder",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Mobile - Create folder1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Automation - Create folder2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message1": {
+      "main": [
+        [
+          {
+            "node": "Create an event",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a channel1": {
+      "main": [
+        [
+          {
+            "node": "Send a message2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message2": {
+      "main": [
+        [
+          {
+            "node": "Send a message3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message3": {
+      "main": [
+        [
+          {
+            "node": "Create an event1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a channel2": {
+      "main": [
+        [
+          {
+            "node": "Send a message4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message4": {
+      "main": [
+        [
+          {
+            "node": "Send a message5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message5": {
+      "main": [
+        [
+          {
+            "node": "Create an event2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Web - Create folder": {
+      "main": [
+        [
+          {
+            "node": "Contracts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mobile - Create folder1": {
+      "main": [
+        [
+          {
+            "node": "Contracts1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Automation - Create folder2": {
+      "main": [
+        [
+          {
+            "node": "Contracts2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "client-onboarding": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets Trigger",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets Trigger": {
+      "main": [
+        [
+          {
+            "node": "Log to Client Sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Contracts": {
+      "main": [
+        [
+          {
+            "node": "Deliverables",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Deliverables": {
+      "main": [
+        [
+          {
+            "node": "Meeting Notes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Meeting Notes": {
+      "main": [
+        [
+          {
+            "node": "Create a channel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Contracts1": {
+      "main": [
+        [
+          {
+            "node": "Deliverables1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Deliverables1": {
+      "main": [
+        [
+          {
+            "node": "Meeting Notes1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Contracts2": {
+      "main": [
+        [
+          {
+            "node": "Deliverables2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Deliverables2": {
+      "main": [
+        [
+          {
+            "node": "Meeting Notes2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Meeting Notes1": {
+      "main": [
+        [
+          {
+            "node": "Create a channel1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Meeting Notes2": {
+      "main": [
+        [
+          {
+            "node": "Create a channel2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Log to Client Sheet": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "60a1bb15-a9db-4343-b731-4e7de1c34b9a",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "35999adec40d7b774f501aa62130ed1b9af825e800a7451642e7c9e73cc7b4a6"
+  },
+  "nodeGroups": [],
+  "id": "0OtG5N7POWfzZcxm",
+  "tags": []
+}
