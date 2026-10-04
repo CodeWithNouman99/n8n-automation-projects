@@ -62,7 +62,7 @@
       "parameters": {
         "documentId": {
           "__rl": true,
-          "value": "1tWfJiE1aPSlyiby0fv5jNKpJd0gJ7SJCb87fSvJw_KQ",
+          "value": "YOUR_GOOGLE_SHEET_ID",
           "mode": "list",
           "cachedResultName": "Copy of Doctor Appointment ( by GreatStack )",
           "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1tWfJiE1aPSlyiby0fv5jNKpJd0gJ7SJCb87fSvJw_KQ/edit?usp=drivesdk"
@@ -95,7 +95,7 @@
       "parameters": {
         "documentId": {
           "__rl": true,
-          "value": "1tWfJiE1aPSlyiby0fv5jNKpJd0gJ7SJCb87fSvJw_KQ",
+          "value": "YOUR_GOOGLE_SHEET_ID",
           "mode": "list",
           "cachedResultName": "Copy of Doctor Appointment ( by GreatStack )",
           "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1tWfJiE1aPSlyiby0fv5jNKpJd0gJ7SJCb87fSvJw_KQ/edit?usp=drivesdk"
@@ -1698,8 +1698,8 @@
     {
       "parameters": {
         "operation": "send",
-        "phoneNumberId": "1261867963685028",
-        "recipientPhoneNumber": "923401504112",
+        "phoneNumberId": "YOUR_PHONE_NUMBER_ID",
+        "recipientPhoneNumber": "YOUR_PHONE_NUMBER",
         "textBody": "={{ $json.output }}",
         "additionalFields": {}
       },

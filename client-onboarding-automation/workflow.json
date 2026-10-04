@@ -168,9 +168,9 @@
       "parameters": {
         "calendar": {
           "__rl": true,
-          "value": "mrnoumannomi7@gmail.com",
+          "value": "YOUR_CALENDAR_EMAIL",
           "mode": "list",
-          "cachedResultName": "mrnoumannomi7@gmail.com"
+          "cachedResultName": "YOUR_CALENDAR_EMAIL"
         },
         "start": "=   {{ $now.plus({ days: 1 }).set({ hour: 11, minute: 0 }).toISO() }}",
         "end": "=   {{ $now.plus({ days: 1 }).set({ hour: 11, minute: 30 }).toISO() }}",
@@ -274,9 +274,9 @@
       "parameters": {
         "calendar": {
           "__rl": true,
-          "value": "mrnoumannomi7@gmail.com",
+          "value": "YOUR_CALENDAR_EMAIL",
           "mode": "list",
-          "cachedResultName": "mrnoumannomi7@gmail.com"
+          "cachedResultName": "YOUR_CALENDAR_EMAIL"
         },
         "start": "=   {{ $now.plus({ days: 1 }).set({ hour: 11, minute: 0 }).toISO() }}",
         "end": "=   {{ $now.plus({ days: 1 }).set({ hour: 11, minute: 30 }).toISO() }}",
@@ -380,9 +380,9 @@
       "parameters": {
         "calendar": {
           "__rl": true,
-          "value": "mrnoumannomi7@gmail.com",
+          "value": "YOUR_CALENDAR_EMAIL",
           "mode": "list",
-          "cachedResultName": "mrnoumannomi7@gmail.com"
+          "cachedResultName": "YOUR_CALENDAR_EMAIL"
         },
         "start": "=   {{ $now.plus({ days: 1 }).set({ hour: 11, minute: 0 }).toISO() }}",
         "end": "=   {{ $now.plus({ days: 1 }).set({ hour: 11, minute: 30 }).toISO() }}",
@@ -679,10 +679,10 @@
         },
         "folderId": {
           "__rl": true,
-          "value": "1RiumH59BHdE0xA6QjlEbt2F9b-EEEm2_",
+          "value": "YOUR_DRIVE_FOLDER_ID",
           "mode": "list",
-          "cachedResultName": "   Ali Traders",
-          "cachedResultUrl": "https://drive.google.com/drive/folders/1RiumH59BHdE0xA6QjlEbt2F9b-EEEm2_"
+          "cachedResultName": "   Client Folder",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/YOUR_DRIVE_FOLDER_ID"
         },
         "options": {}
       },
@@ -712,10 +712,10 @@
         },
         "folderId": {
           "__rl": true,
-          "value": "1RiumH59BHdE0xA6QjlEbt2F9b-EEEm2_",
+          "value": "YOUR_DRIVE_FOLDER_ID",
           "mode": "list",
-          "cachedResultName": "   Ali Traders",
-          "cachedResultUrl": "https://drive.google.com/drive/folders/1RiumH59BHdE0xA6QjlEbt2F9b-EEEm2_"
+          "cachedResultName": "   Client Folder",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/YOUR_DRIVE_FOLDER_ID"
         },
         "options": {}
       },
@@ -865,17 +865,17 @@
         "operation": "append",
         "documentId": {
           "__rl": true,
-          "value": "1AIHamEZZAxNyD9hc99rmgV5WDeJ8mDS85W-EVKUyupE",
+          "value": "YOUR_GOOGLE_SHEET_ID",
           "mode": "list",
           "cachedResultName": "Client Log",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1AIHamEZZAxNyD9hc99rmgV5WDeJ8mDS85W-EVKUyupE/edit?usp=drivesdk"
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_GOOGLE_SHEET_ID/edit?usp=drivesdk"
         },
         "sheetName": {
           "__rl": true,
           "value": "gid=0",
           "mode": "list",
           "cachedResultName": "Sheet1",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1AIHamEZZAxNyD9hc99rmgV5WDeJ8mDS85W-EVKUyupE/edit#gid=0"
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_GOOGLE_SHEET_ID/edit#gid=0"
         },
         "columns": {
           "mappingMode": "defineBelow",
@@ -1004,17 +1004,17 @@
       "parameters": {
         "documentId": {
           "__rl": true,
-          "value": "1AIHamEZZAxNyD9hc99rmgV5WDeJ8mDS85W-EVKUyupE",
+          "value": "YOUR_GOOGLE_SHEET_ID",
           "mode": "list",
           "cachedResultName": "Client Log",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1AIHamEZZAxNyD9hc99rmgV5WDeJ8mDS85W-EVKUyupE/edit?usp=drivesdk"
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_GOOGLE_SHEET_ID/edit?usp=drivesdk"
         },
         "sheetName": {
           "__rl": true,
           "value": "gid=0",
           "mode": "list",
           "cachedResultName": "Sheet1",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1AIHamEZZAxNyD9hc99rmgV5WDeJ8mDS85W-EVKUyupE/edit#gid=0"
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_GOOGLE_SHEET_ID/edit#gid=0"
         },
         "filtersUI": {
           "values": []
