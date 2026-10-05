@@ -2,7 +2,7 @@
 
 An n8n workflow that onboards a new software-house client from a single form submission. One request sets up the client's Drive workspace, Slack channel, welcome email and kickoff meeting, and logs the client for an admin dashboard.
 
-![Workflow]
+![Workflow](./screenshots/workflow.webp)
 
 ## What it does
 
