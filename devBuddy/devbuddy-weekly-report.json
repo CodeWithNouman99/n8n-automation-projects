@@ -1,0 +1,238 @@
+{
+  "name": "DevBuddy - Weekly Report",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "weeks",
+              "triggerAtDay": [
+                5
+              ],
+              "triggerAtHour": 17
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        0,
+        0
+      ],
+      "id": "c30f5b5a-61c0-480f-bc3c-3da89b58b034",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_GOOGLE_SHEET_ID",
+          "mode": "list",
+          "cachedResultName": "DevBuddy Database",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_GOOGLE_SHEET_ID/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Developers",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_GOOGLE_SHEET_ID/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        224,
+        0
+      ],
+      "id": "83b67f2e-c512-4b33-9bda-a93aa95066d6",
+      "name": "Get All Developers",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Y70YcCKtbwwS7f8y",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_GOOGLE_SHEET_ID",
+          "mode": "list",
+          "cachedResultName": "DevBuddy Database",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_GOOGLE_SHEET_ID/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1060507126,
+          "mode": "list",
+          "cachedResultName": "Progress",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_GOOGLE_SHEET_ID/edit#gid=1060507126"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        448,
+        0
+      ],
+      "id": "9e95c8e0-42fd-4614-9629-31250364bad6",
+      "name": "Get All Progress",
+      "executeOnce": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Y70YcCKtbwwS7f8y",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_GOOGLE_SHEET_ID",
+          "mode": "list",
+          "cachedResultName": "DevBuddy Database",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_GOOGLE_SHEET_ID/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1096071451,
+          "mode": "list",
+          "cachedResultName": "Questions_Log",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_GOOGLE_SHEET_ID/edit#gid=1096071451"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        672,
+        0
+      ],
+      "id": "8fd7590d-0b8c-46b0-9d4a-ea929d619cf7",
+      "name": "Get All Questions",
+      "executeOnce": true,
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Y70YcCKtbwwS7f8y",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const devs = $('Get All Developers').all().map(i => i.json);\nconst progress = $('Get All Progress').all().map(i => i.json);\nconst questions = $('Get All Questions').all().map(i => i.json).filter(q => q.dev_id);\n\nconst TOTAL = 7;\nconst byManager = {};\n\nfor (const d of devs) {\n  if (!d.dev_id || !d.manager_whatsapp) continue;\n\n  const rows = progress.filter(p => p.dev_id === d.dev_id);\n  const done = rows.filter(p => p.status === 'Done').length;\n  const pending = rows.find(p => p.status === 'Pending');\n\n  let state = '🟢 On track';\n  if (d.status === 'Completed') {\n    state = '🏁 Completed';\n  } else if (pending) {\n    const days = Math.floor($now.diff(DateTime.fromISO(String(pending.assigned_date)), 'days').days);\n    if (days >= 2) state = `🔴 Stuck on ${pending.task_id} for ${days} days`;\n  }\n\n  const qs = questions.filter(q => q.dev_id === d.dev_id);\n  const notInDocs = qs.filter(q => String(q.found_in_docs).toLowerCase() === 'no').length;\n\n  const line =\n    `*${d.name}* (${d.role})\\n` +\n    `Day ${d.current_day} of ${TOTAL} | Tasks done: ${done}/${TOTAL}\\n` +\n    `${state}\\n` +\n    `Questions asked: ${qs.length} | Not in docs: ${notInDocs}`;\n\n  const key = String(d.manager_whatsapp);\n  if (!byManager[key]) byManager[key] = [];\n  byManager[key].push(line);\n}\n\nreturn Object.entries(byManager).map(([manager_whatsapp, lines]) => ({\n  json: {\n    manager_whatsapp,\n    report:\n      `📊 *DevBuddy Weekly Report*\\n` +\n      `${$now.toFormat('dd LLL yyyy')}\\n` +\n      `Developers: ${lines.length}\\n\\n` +\n      lines.join('\\n\\n'),\n  },\n}));"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        896,
+        0
+      ],
+      "id": "fdc5450b-539d-42da-8d42-65e6604eeff3",
+      "name": "Build Report"
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "phoneNumberId": "1261867963685028",
+        "recipientPhoneNumber": "={{ $json.manager_whatsapp }}",
+        "textBody": "={{ $json.report }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1.1,
+      "position": [
+        1120,
+        0
+      ],
+      "id": "81680761-1efa-4350-9d48-efedfccbde7e",
+      "name": "Send Weekly Report",
+      "webhookId": "00452b69-d552-45e4-9a22-b9721d6991bd",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "hTXSxiNrmsn5TKUe",
+          "name": "WhatsApp account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get All Developers",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get All Developers": {
+      "main": [
+        [
+          {
+            "node": "Get All Progress",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get All Progress": {
+      "main": [
+        [
+          {
+            "node": "Get All Questions",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get All Questions": {
+      "main": [
+        [
+          {
+            "node": "Build Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Report": {
+      "main": [
+        [
+          {
+            "node": "Send Weekly Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "f11664c2-103b-4b0f-96a3-a12e8b2241f0",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "563689c597e4f31a4b168e404c46b8fed871271f7bc1d25ccba3c00ec81d9481"
+  },
+  "nodeGroups": [],
+  "id": "cH4LEBHAIYCL4RQv",
+  "tags": []
+}
