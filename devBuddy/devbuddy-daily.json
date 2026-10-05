@@ -1,0 +1,950 @@
+{
+  "name": "DevBuddy - Daily",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 9
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -368,
+        176
+      ],
+      "id": "11974503-bf1d-4ea2-84de-a16e07c0f35a",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_GOOGLE_SHEET_ID",
+          "mode": "list",
+          "cachedResultName": "DevBuddy Database",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_GOOGLE_SHEET_ID/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Developers",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_GOOGLE_SHEET_ID/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "status",
+              "lookupValue": "Active"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -144,
+        176
+      ],
+      "id": "dd6a1142-cfb7-42cc-a5d7-a20f51d9d791",
+      "name": "Get Active Developers",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Y70YcCKtbwwS7f8y",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_GOOGLE_SHEET_ID",
+          "mode": "list",
+          "cachedResultName": "DevBuddy Database",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_GOOGLE_SHEET_ID/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1060507126,
+          "mode": "list",
+          "cachedResultName": "Progress",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_GOOGLE_SHEET_ID/edit#gid=1060507126"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "progress_id",
+              "lookupValue": "={{ $json.dev_id }}-T{{ $json.current_day }}"
+            }
+          ]
+        },
+        "options": {
+          "returnFirstMatch": true
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        80,
+        176
+      ],
+      "id": "3a0c56c3-6652-454c-b54d-81af841be7fb",
+      "name": "Get Current Progress",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Y70YcCKtbwwS7f8y",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "341397cd-cdce-4472-bab8-a3b4f69341fa",
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "Done",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        304,
+        176
+      ],
+      "id": "84ea1074-3bab-46e5-8be1-f5ebf1dc26ae",
+      "name": "Is Task Done"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_GOOGLE_SHEET_ID",
+          "mode": "list",
+          "cachedResultName": "DevBuddy Database",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_GOOGLE_SHEET_ID/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 967039030,
+          "mode": "list",
+          "cachedResultName": "Onboarding_Tasks",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_GOOGLE_SHEET_ID/edit#gid=967039030"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "day",
+              "lookupValue": "={{ Number($('Get Active Developers').item.json.current_day) + 1 }}"
+            }
+          ]
+        },
+        "options": {
+          "returnFirstMatch": true
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        752,
+        272
+      ],
+      "id": "b716c3bf-fdb9-46af-91ed-c42cb0dd0b8a",
+      "name": "Get Next Task",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Y70YcCKtbwwS7f8y",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_GOOGLE_SHEET_ID",
+          "mode": "list",
+          "cachedResultName": "DevBuddy Database",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_GOOGLE_SHEET_ID/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1060507126,
+          "mode": "list",
+          "cachedResultName": "Progress",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_GOOGLE_SHEET_ID/edit#gid=1060507126"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "dev_id": "={{ $('Get Active Developers').item.json.dev_id }}",
+            "task_id": "={{ $json.task_id }}",
+            "assigned_date": "={{ $now.toFormat('yyyy-MM-dd') }}",
+            "progress_id": "={{ $('Get Active Developers').item.json.dev_id }}-{{ $json.task_id }}",
+            "status": "Pending"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "dev_id",
+              "displayName": "dev_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "task_id",
+              "displayName": "task_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "assigned_date",
+              "displayName": "assigned_date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "completed_date",
+              "displayName": "completed_date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "progress_id",
+              "displayName": "progress_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        976,
+        272
+      ],
+      "id": "48542e95-11cd-4d60-92a3-6f929266acde",
+      "name": "Add Next Progress",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Y70YcCKtbwwS7f8y",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_GOOGLE_SHEET_ID",
+          "mode": "list",
+          "cachedResultName": "DevBuddy Database",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_GOOGLE_SHEET_ID/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Developers",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_GOOGLE_SHEET_ID/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "dev_id": "={{ $('Get Active Developers').item.json.dev_id }}",
+            "current_day": "={{ $('Get Next Task').item.json.day }}"
+          },
+          "matchingColumns": [
+            "dev_id"
+          ],
+          "schema": [
+            {
+              "id": "dev_id",
+              "displayName": "dev_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "name",
+              "displayName": "name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "whatsapp_number",
+              "displayName": "whatsapp_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "role",
+              "displayName": "role",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "join_date",
+              "displayName": "join_date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "manager_whatsapp",
+              "displayName": "manager_whatsapp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "current_day",
+              "displayName": "current_day",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1200,
+        272
+      ],
+      "id": "15673fc0-51cb-4357-8135-8863e13c1b1a",
+      "name": "Update Current Day",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Y70YcCKtbwwS7f8y",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "phoneNumberId": "1261867963685028",
+        "recipientPhoneNumber": "={{ String($('Get Active Developers').item.json.whatsapp_number) }}",
+        "textBody": "=☀️ *Good morning, {{ $('Get Active Developers').item.json.name }}!*\n\n📌 *Day {{ $('Get Next Task').item.json.day }} Task: {{ $('Get Next Task').item.json.task_title }}*\n{{ $('Get Next Task').item.json.description }}\n\nWhen you finish, reply *done*.\nHave a question? Just ask me here! 💬",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1.1,
+      "position": [
+        1424,
+        272
+      ],
+      "id": "fa3a144a-ae3e-4c53-8ae2-0678aa0d97f4",
+      "name": "Send Next Task",
+      "webhookId": "945d415b-8e43-46da-9155-acc7a7563a6a",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "hTXSxiNrmsn5TKUe",
+          "name": "WhatsApp account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "44b4005c-6f60-4175-a2e9-c74bd1e05e1f",
+              "leftValue": "={{ Math.floor($now.diff(DateTime.fromISO($json.assigned_date), 'days').days) }}",
+              "rightValue": 2,
+              "operator": {
+                "type": "number",
+                "operation": "gte"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        528,
+        -16
+      ],
+      "id": "a718dcc5-a541-4a14-bc5f-33ab91900771",
+      "name": "Is Stuck"
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "phoneNumberId": "1261867963685028",
+        "recipientPhoneNumber": "={{ String($('Get Active Developers').item.json.whatsapp_number) }}",
+        "textBody": "=⏰ *Reminder, {{ $('Get Active Developers').item.json.name }}!*  Your *Day {{ $('Get Active Developers').item.json.current_day }}* task ({{ $('Get Current Progress').item.json.task_id }}) is still pending.  Reply *task* to see the details, or *done* when you finish. Stuck? Just ask me! 💬",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1.1,
+      "position": [
+        752,
+        80
+      ],
+      "id": "941c6623-0d5e-4bc9-a219-1b6b54ed8fdf",
+      "name": "Send Reminder",
+      "webhookId": "787f248e-5aad-4f6e-ad42-451b777b0e53",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "hTXSxiNrmsn5TKUe",
+          "name": "WhatsApp account"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_GOOGLE_SHEET_ID",
+          "mode": "list",
+          "cachedResultName": "DevBuddy Database",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_GOOGLE_SHEET_ID/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 967039030,
+          "mode": "list",
+          "cachedResultName": "Onboarding_Tasks",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_GOOGLE_SHEET_ID/edit#gid=967039030"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "task_id",
+              "lookupValue": "={{ $('Get Current Progress').item.json.task_id }}"
+            }
+          ]
+        },
+        "options": {
+          "returnFirstMatch": true
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        752,
+        -112
+      ],
+      "id": "cd7e2068-8fbf-4f17-80ab-cb294b0c15e5",
+      "name": "Get Stuck Task",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Y70YcCKtbwwS7f8y",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "phoneNumberId": "1261867963685028",
+        "recipientPhoneNumber": "={{ String($('Get Active Developers').item.json.manager_whatsapp) }}",
+        "template": "devbuddy_stuck_alert_v2|en",
+        "components": {
+          "component": [
+            {
+              "bodyParameters": {
+                "parameter": [
+                  {
+                    "text": "={{ $('Get Active Developers').item.json.name }}"
+                  },
+                  {
+                    "text": "={{ $json.task_title }}"
+                  },
+                  {
+                    "text": "={{ String(Math.floor($now.diff(DateTime.fromISO($('Get Current Progress').item.json.assigned_date), 'days').days)) }}"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1.1,
+      "position": [
+        976,
+        -112
+      ],
+      "id": "5aad9222-8d13-4b54-ac7b-56fcf8f8d6ca",
+      "name": "Send Manager Alert",
+      "webhookId": "1bd89cd6-4db6-488f-b059-9b043622824d",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "hTXSxiNrmsn5TKUe",
+          "name": "WhatsApp account"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "01ff6f24-c4a9-42a5-88dc-60020cc51f48",
+              "leftValue": "={{ Number($('Get Active Developers').item.json.current_day) }}",
+              "rightValue": 7,
+              "operator": {
+                "type": "number",
+                "operation": "gte"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        528,
+        368
+      ],
+      "id": "21ea8805-d3f0-42db-97eb-df45757f632a",
+      "name": "Is Last Day"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_GOOGLE_SHEET_ID",
+          "mode": "list",
+          "cachedResultName": "DevBuddy Database",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_GOOGLE_SHEET_ID/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Developers",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_GOOGLE_SHEET_ID/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "dev_id": "={{ $('Get Active Developers').item.json.dev_id }}",
+            "status": "Completed"
+          },
+          "matchingColumns": [
+            "dev_id"
+          ],
+          "schema": [
+            {
+              "id": "dev_id",
+              "displayName": "dev_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "name",
+              "displayName": "name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "whatsapp_number",
+              "displayName": "whatsapp_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "role",
+              "displayName": "role",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "join_date",
+              "displayName": "join_date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "manager_whatsapp",
+              "displayName": "manager_whatsapp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "current_day",
+              "displayName": "current_day",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        752,
+        464
+      ],
+      "id": "4e3a11b1-3f6b-4083-bd39-819085cfa90c",
+      "name": "Mark Completed",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Y70YcCKtbwwS7f8y",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "phoneNumberId": "1261867963685028",
+        "recipientPhoneNumber": "={{ String($('Get Active Developers').item.json.whatsapp_number) }}",
+        "textBody": "=🎉 *Congratulations, {{ $('Get Active Developers').item.json.name }}!*  You have completed your first week at *Nexora Labs*. All 7 onboarding tasks are done. ✅  You can still ask me any question about setup, Git, deployment, or HR anytime. Welcome to the team! 🚀",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1.1,
+      "position": [
+        976,
+        464
+      ],
+      "id": "3f4cc8d9-7df2-4421-8f7e-0aa05c7242e4",
+      "name": "Send Completion",
+      "webhookId": "0b8b9dbb-0f20-49f8-a2ad-5f8eb5977af2",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "hTXSxiNrmsn5TKUe",
+          "name": "WhatsApp account"
+        }
+      },
+      "onError": "continueRegularOutput"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get Active Developers",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Active Developers": {
+      "main": [
+        [
+          {
+            "node": "Get Current Progress",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Current Progress": {
+      "main": [
+        [
+          {
+            "node": "Is Task Done",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is Task Done": {
+      "main": [
+        [
+          {
+            "node": "Is Last Day",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Is Stuck",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Next Task": {
+      "main": [
+        [
+          {
+            "node": "Add Next Progress",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add Next Progress": {
+      "main": [
+        [
+          {
+            "node": "Update Current Day",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Current Day": {
+      "main": [
+        [
+          {
+            "node": "Send Next Task",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is Stuck": {
+      "main": [
+        [
+          {
+            "node": "Get Stuck Task",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send Reminder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Stuck Task": {
+      "main": [
+        [
+          {
+            "node": "Send Manager Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is Last Day": {
+      "main": [
+        [
+          {
+            "node": "Mark Completed",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get Next Task",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mark Completed": {
+      "main": [
+        [
+          {
+            "node": "Send Completion",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "timeSavedMode": "fixed",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
+  },
+  "versionId": "c5f91252-5924-4afe-9ee4-1225e5d6c430",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "563689c597e4f31a4b168e404c46b8fed871271f7bc1d25ccba3c00ec81d9481"
+  },
+  "nodeGroups": [],
+  "id": "wCkcEYUlSLCycPnM",
+  "tags": []
+}
