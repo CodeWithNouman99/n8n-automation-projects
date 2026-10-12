@@ -8,6 +8,17 @@ A collection of AI automation workflows built with n8n. Each folder holds one pr
 |---|---|---|
 | [WhatsApp Doctor Appointment Bot](./whatsapp-doctor-appointment) | Patients book, reschedule and cancel clinic appointments over WhatsApp, with Stripe payments, refunds and daily reminders | n8n, WhatsApp Cloud API, Gemini, Google Sheets, Stripe |
 | [Client Onboarding Automation](./client-onboarding-automation) | Onboards a new software-house client from one form submission: Drive workspace, Slack channel, welcome email, kickoff call and a client log for an admin dashboard | n8n, Webhook, Google Sheets, Google Drive, Slack, Gmail, Google Calendar |
+| [DevBuddy](./devBuddy) | AI onboarding buddy for new developers: WhatsApp welcome, one task a day, answers from company docs, stuck alerts and a weekly manager report | n8n, WhatsApp Cloud API, Gemini, Google Workspace |
+
+## Workflow previews
+
+**Client Onboarding Automation**
+
+![Client Onboarding workflow](./client-onboarding-automation/screenshots/workflow.webp)
+
+**WhatsApp Doctor Appointment Bot**
+
+![WhatsApp Doctor Appointment workflow](./whatsapp-doctor-appointment/screenshots/workflow.png)
 
 ## How to use a workflow
 
@@ -28,10 +39,15 @@ n8n-automation-projects/
 │   ├── workflow.json
 │   ├── README.md
 │   └── screenshots/
-└── client-onboarding-automation/
-    ├── workflow.json
-    ├── README.md
-    └── screenshots/
+├── client-onboarding-automation/
+│   ├── workflow.json
+│   ├── README.md
+│   └── screenshots/
+└── devBuddy/
+    ├── devbuddy-main.json
+    ├── devbuddy-daily.json
+    ├── devbuddy-weekly-report.json
+    └── README.md
 ```
 
 ## Contact
