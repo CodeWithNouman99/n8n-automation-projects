@@ -36,6 +36,7 @@ Every workflow is built to handle the full lifecycle of a process — triggers, 
 | 🩺 **[WhatsApp Doctor Appointment Bot](./whatsapp-doctor-appointment)** | Clinics lose time on calls and manual booking. Patients book, reschedule and cancel appointments directly on WhatsApp — with Stripe payments, automatic refunds and daily reminders. | n8n · WhatsApp Cloud API · Gemini · Google Sheets · Stripe |
 | 🤝 **[Client Onboarding Automation](./client-onboarding-automation)** | Onboarding a new client takes hours of repetitive setup. One form submission provisions a Drive workspace, Slack channel, welcome email, kickoff call and a client log for the admin dashboard. | n8n · Webhook · Google Sheets · Drive · Slack · Gmail · Calendar |
 | 🧑‍💻 **[DevBuddy](./devBuddy)** | New developers get stuck and seniors lose time answering repeat questions. An AI onboarding buddy sends a WhatsApp welcome, one task a day, answers from company docs, raises stuck alerts and sends a weekly manager report. | n8n · WhatsApp Cloud API · Gemini · Google Workspace |
+| 💼 **[AI Job Hunter](./ai-job-hunter)** | Job hunting means hours of searching and rewriting cover letters. Finds jobs, matches them with my CV using RAG, writes tailored cover letters and tracks applications. 🚧 *Work in progress* | n8n · Gemini · Supabase · WhatsApp Cloud API |
 
 ---
 
