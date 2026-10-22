@@ -1,0 +1,485 @@
+{
+  "name": "WF1 Job Collector",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 9
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        0,
+        96
+      ],
+      "id": "756c5214-98a2-42fc-a480-6441faa9e5a1",
+      "name": "Daily 9AM"
+    },
+    {
+      "parameters": {
+        "url": "https://remotive.com/api/remote-jobs",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "category",
+              "value": "software-dev"
+            },
+            {
+              "name": "limit",
+              "value": "50"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        224,
+        0
+      ],
+      "id": "dc1b74f1-ea71-44e2-a4bb-5ec6f89dfffc",
+      "name": "Get Remotive Jobs"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "jobs",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1.1,
+      "position": [
+        448,
+        0
+      ],
+      "id": "703a786e-e89b-4ff3-acfb-aacc2ab55283",
+      "name": "Split Remotive Jobs"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "0ffab388-d930-44b3-8aac-82d453184668",
+              "name": "source",
+              "value": "remotive",
+              "type": "string"
+            },
+            {
+              "id": "866bd000-d33b-4684-bc36-b2821fd4aef9",
+              "name": "external_id",
+              "value": "={{ String($json.id) }}",
+              "type": "string"
+            },
+            {
+              "id": "461a8580-2de3-4c8a-bb0c-2b3ff0ea6db7",
+              "name": "title",
+              "value": "={{ $json.title }}",
+              "type": "string"
+            },
+            {
+              "id": "f59ffae5-493a-4a33-8159-cd033fe9d6b0",
+              "name": "company",
+              "value": "={{ $json.company_name }}",
+              "type": "string"
+            },
+            {
+              "id": "f95d110c-9e35-4cb9-81e2-e42773d6403b",
+              "name": "location",
+              "value": "={{ $json.candidate_required_location }}",
+              "type": "string"
+            },
+            {
+              "id": "3a9011ef-197c-4eb0-9ece-c72e47f5264e",
+              "name": "job_type",
+              "value": "={{ $json.job_type }}",
+              "type": "string"
+            },
+            {
+              "id": "3989b1c5-3687-4bbe-9b37-f8f77d4b849b",
+              "name": "salary",
+              "value": "={{ $json.salary }}",
+              "type": "string"
+            },
+            {
+              "id": "0d4d8635-6b57-4812-899b-95adf633f326",
+              "name": "url",
+              "value": "={{ $json.url }}",
+              "type": "string"
+            },
+            {
+              "id": "b07e3c4f-b6df-4f7e-bbd6-661d99a781ae",
+              "name": "description",
+              "value": "={{ $json.description.replace(/<[^>]*>/g, ' ').replace(/\\s+/g, ' ').trim() }}",
+              "type": "string"
+            },
+            {
+              "id": "230083a8-dda9-40d4-a318-3e7b0eaf5d71",
+              "name": "tags",
+              "value": "={{ $json.tags }}",
+              "type": "array"
+            },
+            {
+              "id": "714ddafa-bab0-49ef-b6a9-bdab1b684321",
+              "name": "posted_at",
+              "value": "={{ $json.publication_date }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        672,
+        0
+      ],
+      "id": "f688018f-5f97-4403-9f18-6ff0509e6eb7",
+      "name": "Normalize Remotive"
+    },
+    {
+      "parameters": {
+        "url": "https://remoteok.com/api",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "User-Agent",
+              "value": "AI-Job-Hunter/1.0"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        224,
+        192
+      ],
+      "id": "f5aa67fa-eada-4b97-9425-82de7a600ddf",
+      "name": "Get RemoteOK Jobs"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "88a6e916-2088-44d8-9f95-7193affa40b4",
+              "leftValue": "={{ $json.id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.3,
+      "position": [
+        448,
+        192
+      ],
+      "id": "0c4cba45-77ae-4133-b918-f3f47b15b1d2",
+      "name": "Remove Legal Item"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "3ef96022-d7de-4426-b5d1-8469efca27ec",
+              "name": "source",
+              "value": "remoteok",
+              "type": "string"
+            },
+            {
+              "id": "e542d595-0b19-415e-ad1d-1720f09609aa",
+              "name": "external_id",
+              "value": "={{ String($json.id) }}",
+              "type": "string"
+            },
+            {
+              "id": "1482eb54-d81e-4b61-836a-143f2b8b4386",
+              "name": "title",
+              "value": "={{ $json.position }}",
+              "type": "string"
+            },
+            {
+              "id": "ba18ec0d-2534-4c15-9519-2a279c8b4c8a",
+              "name": "company",
+              "value": "={{ $json.company }}",
+              "type": "string"
+            },
+            {
+              "id": "f3566dbd-2d4f-4731-9759-af217f611d12",
+              "name": "location",
+              "value": "={{ $json.location }}",
+              "type": "string"
+            },
+            {
+              "id": "cc752182-4ddd-4a0d-b096-6b74a75d8fe8",
+              "name": "job_type",
+              "value": "",
+              "type": "string"
+            },
+            {
+              "id": "0708422e-a947-436b-b80d-87e5521cbf23",
+              "name": "salary",
+              "value": "=\t{{ $json.salary_min ? '$' + $json.salary_min + ' - $' + $json.salary_max : '' }}",
+              "type": "string"
+            },
+            {
+              "id": "11248d31-a858-4f6c-a442-042203f88a89",
+              "name": "url",
+              "value": "={{ $json.url }}",
+              "type": "string"
+            },
+            {
+              "id": "203b64da-aaa9-4655-8287-b5002fa6371d",
+              "name": "description",
+              "value": "={{ ($json.description ?? '').replace(/<[^>]*>/g, ' ').replace(/\\s+/g, ' ').trim() }}",
+              "type": "string"
+            },
+            {
+              "id": "2804e1a8-7b05-4072-9890-d12e4d481ff0",
+              "name": "tags",
+              "value": "={{ $json.tags }}",
+              "type": "array"
+            },
+            {
+              "id": "d44352b9-0480-4c7e-99bd-da130063bfdc",
+              "name": "posted_at",
+              "value": "=\t{{ $json.date }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        672,
+        192
+      ],
+      "id": "f282f459-39c4-4d50-a133-b728d27e670c",
+      "name": "Normalize RemoteOK"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        896,
+        96
+      ],
+      "id": "a564f30d-d109-4eff-91bb-b03497e779ae",
+      "name": "Merge All Jobs"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "YOUR_SUPABASE_URL/rest/v1/jobs?on_conflict=source,external_id",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "supabaseApi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Prefer",
+              "value": "resolution=ignore-duplicates,return=representation"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json) }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        1120,
+        96
+      ],
+      "id": "be1e73e2-e3f7-4fc4-be07-df9b3f819849",
+      "name": "Save to Supabase",
+      "alwaysOutputData": true,
+      "credentials": {
+        "supabaseApi": {
+          "id": "xbSu3Bn7jygGLvuk",
+          "name": "Supabase - Job Hunter"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "pE3XJXPJstxXUPpb",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/pE3XJXPJstxXUPpb",
+          "cachedResultName": "WF2 Job Matcher"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {
+          "waitForSubWorkflow": false
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.4,
+      "position": [
+        1344,
+        96
+      ],
+      "id": "26f7d757-d40c-4639-8a27-8c50b5504a01",
+      "name": "Run Job Matcher",
+      "executeOnce": true
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Daily 9AM": {
+      "main": [
+        [
+          {
+            "node": "Get Remotive Jobs",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Get RemoteOK Jobs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Remotive Jobs": {
+      "main": [
+        [
+          {
+            "node": "Split Remotive Jobs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Remotive Jobs": {
+      "main": [
+        [
+          {
+            "node": "Normalize Remotive",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get RemoteOK Jobs": {
+      "main": [
+        [
+          {
+            "node": "Remove Legal Item",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Remove Legal Item": {
+      "main": [
+        [
+          {
+            "node": "Normalize RemoteOK",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize RemoteOK": {
+      "main": [
+        [
+          {
+            "node": "Merge All Jobs",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Normalize Remotive": {
+      "main": [
+        [
+          {
+            "node": "Merge All Jobs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge All Jobs": {
+      "main": [
+        [
+          {
+            "node": "Save to Supabase",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save to Supabase": {
+      "main": [
+        [
+          {
+            "node": "Run Job Matcher",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "0cf3e295-45e2-4edb-a614-a07a765a757a",
+  "meta": {
+    "instanceId": "adc52e4aa86e9401f22612d0f4b523da7f9cc7dd17a0f52ebc09747fcea9c2b5"
+  },
+  "nodeGroups": [],
+  "id": "s91rIIqhSV9NmvL2",
+  "tags": []
+}
