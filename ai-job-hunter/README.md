@@ -2,7 +2,7 @@
 
 An AI automation system built with **n8n + Gemini + Supabase (pgvector) + WhatsApp Cloud API**. It finds remote jobs, matches them against my CV using RAG, writes cover letters, and tracks applications.
 
-> 🚧 Work in progress. WF0–WF2 are done, WF3–WF5 are planned.
+> ✅ WF0–WF5 are done.
 
 ## Problem
 
@@ -15,7 +15,7 @@ A set of n8n workflows that do the boring part:
 1. Store the CV as vector embeddings so it can be searched by meaning.
 2. Collect new remote jobs every day from public job APIs.
 3. Use RAG to score each job 0–100 against the most relevant parts of the CV.
-4. Write cover letters for strong matches, and manage everything from WhatsApp (planned).
+4. Write cover letters for strong matches, and manage everything from WhatsApp.
 
 ## Stack
 
@@ -36,11 +36,11 @@ A set of n8n workflows that do the boring part:
                                       │ similarity search
 ┌───────────────────┐   jobs   ┌──────▼──────────┐ score >= 70 ┌────────────────────┐
 │ WF1 Job Collector │────────▶│ WF2 Job Matcher │────────────▶│ WF3 Cover Letter   │
-│ (daily 9 AM)      │ triggers │ (RAG + Gemini)  │             │ Writer (planned)   │
+│ (daily 9 AM)      │ triggers │ (RAG + Gemini)  │             │ Writer (daily 10AM)│
 └───────────────────┘          └─────────────────┘             └────────────────────┘
 
-  WhatsApp ◀──▶ WF4 WhatsApp Assistant (planned) ◀──▶ job_dashboard / applications
-  any failure ──▶ WF5 Error Guard (planned) ──▶ workflow_errors + WhatsApp alert
+  WhatsApp ◀──▶ WF4 WhatsApp Assistant ◀──▶ job_dashboard / cover_letters / applications
+  any failure ──▶ WF5 Error Guard ──▶ WhatsApp alert
 ```
 
 | # | Workflow | What it does | Status |
@@ -48,9 +48,9 @@ A set of n8n workflows that do the boring part:
 | WF0 | CV Brain | Form upload of the CV PDF → delete old chunks → split into chunks → Gemini embeddings → Supabase vector store (`cv_chunks`) | ✅ Done |
 | WF1 | Job Collector | Daily at 9 AM: fetch Remotive + RemoteOK → normalize to one shape → upsert into `jobs` (dedupe on `source, external_id`) → trigger WF2 | ✅ Done |
 | WF2 | Job Matcher | Take `new` jobs → skip non-dev roles → find matching CV chunks → Gemini scores 0–100 with structured output (score, verdict, reasoning, matched/missing skills) → save to `job_matches` | ✅ Done |
-| WF3 | Cover Letter Writer | Write a tailored cover letter for every job with score >= 70 → save to `cover_letters` | ⏳ Planned |
-| WF4 | WhatsApp Assistant | AI agent on WhatsApp: list top `jobs`, mark one with `applied <id>`, answer questions about jobs and applications | ⏳ Planned |
-| WF5 | Error Guard | n8n error workflow: log failures to `workflow_errors` and send a WhatsApp alert | ⏳ Planned |
+| WF3 | Cover Letter Writer | Daily at 10 AM: get up to 10 jobs with score >= 70 and no cover letter yet → loop each job → find matching CV chunks (Supabase vector store + Gemini embeddings) → Gemini writes a 150–220 word letter using only real CV facts → upsert into `cover_letters` | ✅ Done |
+| WF4 | WhatsApp Assistant | On every WhatsApp message: keep only text from my own number → AI Agent (Gemini + window memory per sender) with 3 HTTP tools: **Get Top Jobs** (`job_dashboard`), **Get Cover Letter** (`cover_letters`), **Mark Applied** (`applications`) → reply on WhatsApp. Commands: `jobs`, `letter <id>`, `applied <id>`, or any question | ✅ Done |
+| WF5 | Error Guard | Error Trigger (set as the error workflow of WF3/WF4): build an alert with workflow, node, error message, time (Asia/Karachi) and execution link → send it to me on WhatsApp | ✅ Done |
 
 ## Repo structure
 
@@ -59,6 +59,9 @@ workflows/
   wf0-cv-brain.json
   wf1-job-collector.json
   wf2-job-matcher.json
+  wf3-cover-letter-writer.json
+  wf4-whatsapp-assistant.json
+  wf5-error-guard.json
 database/
   supabase_schema.sql   # all tables, match_cv_chunks function, job_dashboard view
 docs/screenshots/
@@ -79,7 +82,8 @@ Create these credentials in n8n:
 
 - **Supabase API**: your project URL + service role (secret) key
 - **Google Gemini (PaLM) API**: your Gemini API key
-- **WhatsApp Cloud API**: needed for WF4/WF5 later
+- **WhatsApp API**: permanent access token, used by WF4/WF5 to send messages
+- **WhatsApp OAuth API**: app ID + secret, used by the WF4 WhatsApp Trigger
 
 See `.env.example` for the full list of keys. Never commit real values.
 
@@ -87,6 +91,8 @@ See `.env.example` for the full list of keys. Never commit real values.
 
 1. In n8n: **Workflows → Import from File**, then import each JSON in `workflows/`.
 2. Open each node that shows a credential warning and select your own credentials.
-3. In the **Save to Supabase** (WF1) and **Save Score** (WF2) HTTP nodes, replace `YOUR_SUPABASE_URL` with your project URL, e.g. `https://xxxx.supabase.co`.
-4. In WF1, open **Run Job Matcher** and select your imported WF2 (workflow IDs change on import).
-5. Run WF0 once, upload your CV, then activate WF1.
+3. In every Supabase HTTP node (WF1–WF4), replace `YOUR_SUPABASE_URL` with your project URL, e.g. `https://xxxx.supabase.co`.
+4. In WF4 and WF5, replace `YOUR_WHATSAPP_PHONE_NUMBER_ID` in the WhatsApp send nodes, and `YOUR_WHATSAPP_NUMBER` (your own number with country code, no `+`) in **Only My Text** (WF4) and **Send Alert** (WF5).
+5. In WF1, open **Run Job Matcher** and select your imported WF2 (workflow IDs change on import).
+6. In WF3 and WF4, open **Settings → Error Workflow** and select your imported WF5.
+7. Run WF0 once, upload your CV, then activate WF1, WF3, WF4 and WF5.
