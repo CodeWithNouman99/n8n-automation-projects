@@ -1,0 +1,125 @@
+{
+  "name": "WF5 Error Guard",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "a856c447-14b8-418d-b22b-90b95c3a15e4",
+      "name": "On Any Error"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "504ac679-07ee-402c-aaf4-1b5d68f0d233",
+              "name": "workflow",
+              "value": "={{ $json.workflow.name }}",
+              "type": "string"
+            },
+            {
+              "id": "5c44b0b5-1dd9-4977-87f4-c68d7a90bee6",
+              "name": "node",
+              "value": "={{ $json.execution?.lastNodeExecuted || 'Trigger' }}",
+              "type": "string"
+            },
+            {
+              "id": "3f070a37-854d-44c5-93ed-590db79756a4",
+              "name": "error",
+              "value": "={{ $json.execution?.error?.message || $json.trigger?.error?.message || 'Unknown error' }}",
+              "type": "string"
+            },
+            {
+              "id": "3f5c13c8-3f37-40b7-bcf9-7df3f81556ef",
+              "name": "time",
+              "value": "={{ $now.setZone('Asia/Karachi').toFormat('dd MMM yyyy, hh:mm a') }}",
+              "type": "string"
+            },
+            {
+              "id": "74feac68-5490-4f8d-8ba2-b342fd2d49ce",
+              "name": "url",
+              "value": "={{ $json.execution?.url || 'no link' }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        224,
+        0
+      ],
+      "id": "8a51bf0a-3add-4192-814e-3edfe8dd2abf",
+      "name": "Build Alert"
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "phoneNumberId": "YOUR_WHATSAPP_PHONE_NUMBER_ID",
+        "recipientPhoneNumber": "YOUR_WHATSAPP_NUMBER",
+        "textBody": "=🚨 *Workflow Failed*  *Workflow:* {{ $json.workflow }} *Node:* {{ $json.node }} *Error:* {{ $json.error }} *Time:* {{ $json.time }}  {{ $json.url }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1.1,
+      "position": [
+        448,
+        0
+      ],
+      "id": "9fa2a57a-948b-452a-9bde-67d7f2d27a76",
+      "name": "Send Alert",
+      "webhookId": "3346c245-a516-4632-96a4-ec2ffd25363d",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "qiKukdtfzyoz29yp",
+          "name": "WhatsApp - Permanent"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "On Any Error": {
+      "main": [
+        [
+          {
+            "node": "Build Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Alert": {
+      "main": [
+        [
+          {
+            "node": "Send Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "e3011db5-d786-41cc-b071-5f65c6ca1784",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "adc52e4aa86e9401f22612d0f4b523da7f9cc7dd17a0f52ebc09747fcea9c2b5"
+  },
+  "nodeGroups": [],
+  "id": "GRCIzXqhXRMSqMlW",
+  "tags": []
+}
