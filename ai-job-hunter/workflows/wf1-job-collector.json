@@ -15,7 +15,7 @@
       "typeVersion": 1.4,
       "position": [
         0,
-        96
+        192
       ],
       "id": "756c5214-98a2-42fc-a480-6441faa9e5a1",
       "name": "Daily 9AM"
@@ -285,7 +285,9 @@
       "name": "Normalize RemoteOK"
     },
     {
-      "parameters": {},
+      "parameters": {
+        "numberInputs": 3
+      },
       "type": "n8n-nodes-base.merge",
       "typeVersion": 3.2,
       "position": [
@@ -361,6 +363,155 @@
       "id": "26f7d757-d40c-4639-8a27-8c50b5504a01",
       "name": "Run Job Matcher",
       "executeOnce": true
+    },
+    {
+      "parameters": {
+        "url": "https://jsearch.p.rapidapi.com/search-v2",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "query",
+              "value": "software developer jobs in Pakistan"
+            },
+            {
+              "name": "country",
+              "value": "pk"
+            },
+            {
+              "name": "date_posted",
+              "value": "3days"
+            },
+            {
+              "name": "num_pages",
+              "value": "1"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-RapidAPI-Host",
+              "value": "jsearch.p.rapidapi.com"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        224,
+        384
+      ],
+      "id": "b8e4378a-4965-45ab-b4ad-e50081f21c5b",
+      "name": "Get JSearch Jobs",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "FmltMOxb9n3xeubI",
+          "name": "JSearch API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "data.jobs",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1.1,
+      "position": [
+        448,
+        384
+      ],
+      "id": "2707f3ed-bb64-4e91-a655-3b2e988f65d8",
+      "name": "Split JSearch Jobs"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "3ef96022-d7de-4426-b5d1-8469efca27ec",
+              "name": "source",
+              "value": "jsearch",
+              "type": "string"
+            },
+            {
+              "id": "e542d595-0b19-415e-ad1d-1720f09609aa",
+              "name": "external_id",
+              "value": "={{ $json.job_id }}",
+              "type": "string"
+            },
+            {
+              "id": "1482eb54-d81e-4b61-836a-143f2b8b4386",
+              "name": "title",
+              "value": "={{ $json.job_title }}",
+              "type": "string"
+            },
+            {
+              "id": "ba18ec0d-2534-4c15-9519-2a279c8b4c8a",
+              "name": "company",
+              "value": "={{ $json.employer_name }}",
+              "type": "string"
+            },
+            {
+              "id": "f3566dbd-2d4f-4731-9759-af217f611d12",
+              "name": "location",
+              "value": "={{ [$json.job_city, $json.job_state, $json.job_country].filter(Boolean).join(', ') || 'Pakistan' }}",
+              "type": "string"
+            },
+            {
+              "id": "cc752182-4ddd-4a0d-b096-6b74a75d8fe8",
+              "name": "job_type",
+              "value": "={{ $json.job_employment_type }}",
+              "type": "string"
+            },
+            {
+              "id": "0708422e-a947-436b-b80d-87e5521cbf23",
+              "name": "salary",
+              "value": "={{ $json.job_min_salary ? $json.job_min_salary + ' - ' + $json.job_max_salary + ' ' + ($json.job_salary_currency || '') : '' }}",
+              "type": "string"
+            },
+            {
+              "id": "11248d31-a858-4f6c-a442-042203f88a89",
+              "name": "url",
+              "value": "={{ $json.job_apply_link || $json.job_google_link }}",
+              "type": "string"
+            },
+            {
+              "id": "203b64da-aaa9-4655-8287-b5002fa6371d",
+              "name": "description",
+              "value": "={{ $json.job_description }}",
+              "type": "string"
+            },
+            {
+              "id": "2804e1a8-7b05-4072-9890-d12e4d481ff0",
+              "name": "tags",
+              "value": "={{ ['pakistan', $json.job_publisher].filter(Boolean) }}",
+              "type": "array"
+            },
+            {
+              "id": "d44352b9-0480-4c7e-99bd-da130063bfdc",
+              "name": "posted_at",
+              "value": "={{ $json.job_posted_at_datetime_utc || $now.toISO() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        672,
+        384
+      ],
+      "id": "54d5a312-0722-49fb-b531-d5ff115f08f1",
+      "name": "Normalize JSearch"
     }
   ],
   "pinData": {},
@@ -375,6 +526,11 @@
           },
           {
             "node": "Get RemoteOK Jobs",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Get JSearch Jobs",
             "type": "main",
             "index": 0
           }
@@ -468,14 +624,51 @@
           }
         ]
       ]
+    },
+    "Get JSearch Jobs": {
+      "main": [
+        [
+          {
+            "node": "Split JSearch Jobs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split JSearch Jobs": {
+      "main": [
+        [
+          {
+            "node": "Normalize JSearch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize JSearch": {
+      "main": [
+        [
+          {
+            "node": "Merge All Jobs",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
     }
   },
   "active": true,
   "settings": {
     "executionOrder": "v1",
-    "binaryMode": "separate"
+    "binaryMode": "separate",
+    "timeSavedMode": "fixed",
+    "errorWorkflow": "GRCIzXqhXRMSqMlW",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
   },
-  "versionId": "0cf3e295-45e2-4edb-a614-a07a765a757a",
+  "versionId": "af9073f3-b35d-45c1-a5bc-2ddbea893fc5",
   "meta": {
     "instanceId": "adc52e4aa86e9401f22612d0f4b523da7f9cc7dd17a0f52ebc09747fcea9c2b5"
   },
