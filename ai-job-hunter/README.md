@@ -1,6 +1,6 @@
 # AI Job Hunter
 
-An AI automation system built with **n8n + Gemini + Supabase (pgvector) + WhatsApp Cloud API**. It finds remote jobs, matches them against my CV using RAG, writes cover letters, and tracks applications.
+An AI automation system built with **n8n + Gemini + Supabase (pgvector) + WhatsApp Cloud API**. It finds remote and Pakistan jobs, matches them against my CV using RAG, writes cover letters, and tracks applications.
 
 > ✅ WF0–WF5 are done.
 
@@ -13,7 +13,7 @@ Job hunting means checking several job boards every day, reading dozens of descr
 A set of n8n workflows that do the boring part:
 
 1. Store the CV as vector embeddings so it can be searched by meaning.
-2. Collect new remote jobs every day from public job APIs.
+2. Collect new jobs every day from public job APIs (remote jobs + Pakistan jobs).
 3. Use RAG to score each job 0–100 against the most relevant parts of the CV.
 4. Write cover letters for strong matches, and manage everything from WhatsApp.
 
@@ -25,7 +25,7 @@ A set of n8n workflows that do the boring part:
 | LLM + embeddings | Google Gemini |
 | Database + vector store | Supabase (Postgres + pgvector) |
 | Chat interface + alerts | WhatsApp Cloud API |
-| Job sources | Remotive API, RemoteOK API |
+| Job sources | Remotive API, RemoteOK API, JSearch API (RapidAPI) |
 
 ## Architecture
 
@@ -46,7 +46,7 @@ A set of n8n workflows that do the boring part:
 | # | Workflow | What it does | Status |
 | --- | --- | --- | --- |
 | WF0 | CV Brain | Form upload of the CV PDF → delete old chunks → split into chunks → Gemini embeddings → Supabase vector store (`cv_chunks`) | ✅ Done |
-| WF1 | Job Collector | Daily at 9 AM: fetch Remotive + RemoteOK → normalize to one shape → upsert into `jobs` (dedupe on `source, external_id`) → trigger WF2 | ✅ Done |
+| WF1 | Job Collector | Daily at 9 AM: fetch Remotive + RemoteOK + JSearch (Pakistan jobs) → normalize to one shape → upsert into `jobs` (dedupe on `source, external_id`) → trigger WF2 | ✅ Done |
 | WF2 | Job Matcher | Take `new` jobs → skip non-dev roles → find matching CV chunks → Gemini scores 0–100 with structured output (score, verdict, reasoning, matched/missing skills) → save to `job_matches` | ✅ Done |
 | WF3 | Cover Letter Writer | Daily at 10 AM: get up to 10 jobs with score >= 70 and no cover letter yet → loop each job → find matching CV chunks (Supabase vector store + Gemini embeddings) → Gemini writes a 150–220 word letter using only real CV facts → upsert into `cover_letters` | ✅ Done |
 | WF4 | WhatsApp Assistant | On every WhatsApp message: keep only text from my own number → AI Agent (Gemini + window memory per sender) with 3 HTTP tools: **Get Top Jobs** (`job_dashboard`), **Get Cover Letter** (`cover_letters`), **Mark Applied** (`applications`) → reply on WhatsApp. Commands: `jobs`, `letter <id>`, `applied <id>`, or any question | ✅ Done |
@@ -84,6 +84,7 @@ Create these credentials in n8n:
 - **Google Gemini (PaLM) API**: your Gemini API key
 - **WhatsApp API**: permanent access token, used by WF4/WF5 to send messages
 - **WhatsApp OAuth API**: app ID + secret, used by the WF4 WhatsApp Trigger
+- **Header Auth** (name it `JSearch API`): header name `X-RapidAPI-Key`, value = your RapidAPI key. Used by WF1 **Get JSearch Jobs**. Subscribe to **JSearch** on RapidAPI; the free plan gives 200 requests/month, and WF1 uses 1 request per day
 
 See `.env.example` for the full list of keys. Never commit real values.
 
