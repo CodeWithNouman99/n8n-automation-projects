@@ -1,6 +1,6 @@
 <div align="center">
 
-# ⚡ n8n AI Automation Projects
+#  n8n AI Automation Projects
 
 **Production-style AI workflows that replace manual operations with intelligent, event-driven automation.**
 
@@ -17,7 +17,7 @@ Built with n8n, LLM agents and real-world APIs — designed around problems clin
 
 ---
 
-## 📌 Overview
+##  Overview
 
 This repository is a growing portfolio of end-to-end automation systems. Each project is self-contained and ships with:
 
@@ -29,40 +29,39 @@ Every workflow is built to handle the full lifecycle of a process — triggers, 
 
 ---
 
-## 🚀 Featured Projects
+##  Featured Projects
 
 | Project | Problem Solved | Stack |
 |---|---|---|
 | 🩺 **[WhatsApp Doctor Appointment Bot](./whatsapp-doctor-appointment)** | Clinics lose time on calls and manual booking. Patients book, reschedule and cancel appointments directly on WhatsApp — with Stripe payments, automatic refunds and daily reminders. | n8n · WhatsApp Cloud API · Gemini · Google Sheets · Stripe |
-| 🤝 **[Client Onboarding Automation](./client-onboarding-automation)** | Onboarding a new client takes hours of repetitive setup. One form submission provisions a Drive workspace, Slack channel, welcome email, kickoff call and a client log for the admin dashboard. | n8n · Webhook · Google Sheets · Drive · Slack · Gmail · Calendar |
-| 🧑‍💻 **[DevBuddy](./devBuddy)** | New developers get stuck and seniors lose time answering repeat questions. An AI onboarding buddy sends a WhatsApp welcome, one task a day, answers from company docs, raises stuck alerts and sends a weekly manager report. | n8n · WhatsApp Cloud API · Gemini · Google Workspace |
-| 💼 **[AI Job Hunter](./ai-job-hunter)** | Job hunting means hours of searching and rewriting cover letters. Finds jobs, matches them with my CV using RAG, writes tailored cover letters and tracks applications. 🚧 *Work in progress* | n8n · Gemini · Supabase · WhatsApp Cloud API |
+|  **[Client Onboarding Automation](./client-onboarding-automation)** | Onboarding a new client takes hours of repetitive setup. One form submission provisions a Drive workspace, Slack channel, welcome email, kickoff call and a client log for the admin dashboard. | n8n · Webhook · Google Sheets · Drive · Slack · Gmail · Calendar |
+|  **[DevBuddy](./devBuddy)** | New developers get stuck and seniors lose time answering repeat questions. An AI onboarding buddy sends a WhatsApp welcome, one task a day, answers from company docs, raises stuck alerts and sends a weekly manager report. | n8n · WhatsApp Cloud API · Gemini · Google Workspace |
+|  **[AI Job Hunter](./ai-job-hunter)** | Job hunting means hours of searching and rewriting cover letters. Finds jobs, matches them with my CV using RAG, writes tailored cover letters and tracks applications. 🚧 *Work in progress* | n8n · Gemini · Supabase · WhatsApp Cloud API |
 
 ---
 
-## 🔍 Project Highlights
+##  Project Highlights
 
-### 🩺 WhatsApp Doctor Appointment Bot
+###  WhatsApp Doctor Appointment Bot
 - Conversational **AI agent** handles booking, rescheduling and cancellation in natural language
 - **Stripe** integration for payments and automated refunds on cancellation
 - Scheduled **daily reminders** to reduce no-shows
 - Google Sheets as a lightweight appointment database
 
-### 🤝 Client Onboarding Automation
+### Client Onboarding Automation
 - **Single trigger, multi-system execution** — one webhook fans out across 6 services
 - Auto-creates a structured **Google Drive** workspace and dedicated **Slack** channel
 - Sends a branded welcome email and books the **kickoff call** on Google Calendar
 - Logs every client for an **admin dashboard**
 
-### 🧑‍💻 DevBuddy
+###  DevBuddy
 - Split into **three modular workflows** — main assistant, daily task scheduler and weekly reporting
 - Answers developer questions grounded in **company documentation**
 - Detects blockers and sends **stuck alerts** to the team
 - Generates an automated **weekly progress report** for managers
 
 ---
-
-## 🖼️ Workflow Previews
+##  Workflow Previews
 
 <details open>
 <summary><b>Client Onboarding Automation</b></summary>
@@ -82,7 +81,7 @@ Every workflow is built to handle the full lifecycle of a process — triggers, 
 
 ---
 
-## ⚙️ Quick Start
+##  Quick Start
 
 ```bash
 1. Open a project folder and download its workflow JSON file
@@ -90,12 +89,12 @@ Every workflow is built to handle the full lifecycle of a process — triggers, 
 3. Connect your own credentials for each service node
 4. Replace every YOUR_... placeholder with your values
 5. Follow the project README for service-specific setup
-6. Activate the workflow ✅
+6. Activate the workflow 
 ```
 
 ---
 
-## 🔐 Security
+##  Security
 
 - **No API keys, tokens or secrets** are committed to this repository
 - All sensitive values are replaced with `YOUR_...` placeholders
@@ -103,7 +102,7 @@ Every workflow is built to handle the full lifecycle of a process — triggers, 
 
 ---
 
-## 📁 Repository Structure
+##  Repository Structure
 
 ```
 n8n-automation-projects/
@@ -128,7 +127,7 @@ n8n-automation-projects/
 
 ---
 
-## 🛣️ What's Next
+## What's Next
 
 More workflows are being added — including RAG-based knowledge agents and multi-agent systems. ⭐ **Star the repo** to follow along.
 
@@ -136,7 +135,7 @@ More workflows are being added — including RAG-based knowledge agents and mult
 
 <div align="center">
 
-## 👨‍💻 Author
+##  Author
 
 **Nouman Aslam** — MERN Stack & AI Automation Developer
 
