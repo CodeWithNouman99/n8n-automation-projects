@@ -6,7 +6,6 @@
 
 Built with n8n, LLM agents and real-world APIs — designed around problems clinics and software houses actually face.
 </div>
----
 
 ##  Overview
 
