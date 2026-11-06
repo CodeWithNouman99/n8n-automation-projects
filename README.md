@@ -133,6 +133,4 @@ More workflows are being added — including RAG-based knowledge agents and mult
 [![Portfolio](https://img.shields.io/badge/Portfolio-nouman--aslam.vercel.app-000000?style=for-the-badge&logo=vercel)](https://nouman-aslam.vercel.app)
 [![Email](https://img.shields.io/badge/Email-Contact-EA4335?style=for-the-badge&logo=gmail&logoColor=white)](mailto:mrnoumannomi7@gmail.com)
 
-*Open to internships and junior developer roles in MERN & AI automation.*
-
 </div>
