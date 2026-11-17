@@ -35,6 +35,9 @@ Built for a demo restaurant, **Lahori Tikka House (Faisalabad)**. The agent is *
 - Returns the reservation ID so the agent can read it to the caller
 
 ### Workflow 2 – Update Reservation
+
+![n8n update reservation workflow](./workflows/tabletalk-workflow.png)
+
 `Webhook → Get row(s) by phone → IF found → Update row → Respond`
 `                                     └─ not found → Respond (ask caller to re-check number)`
 - Only overwrites the fields the caller changed (`new_value || old_value`)
