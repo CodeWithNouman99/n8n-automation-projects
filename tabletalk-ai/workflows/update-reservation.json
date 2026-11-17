@@ -1,0 +1,358 @@
+{
+  "name": "TableTalk - Update Reservation",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "restaurant-update",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "9abc4ad7-df46-4f2e-b0a0-91140d21b2d3",
+      "name": "Webhook",
+      "webhookId": "225cde45-3d0a-4df6-afb1-9f074f541121"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_SHEET_ID",
+          "mode": "list",
+          "cachedResultName": "Lahori Tikka House - Reservations"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "YOUR_SHEET_GID",
+          "mode": "list",
+          "cachedResultName": "Reservations"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Phone",
+              "lookupValue": "={{ $json.body.phone }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        224,
+        0
+      ],
+      "id": "7f2fbfa3-20f4-4780-9ce0-746d751446d8",
+      "name": "Get row(s) in sheet",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "YOUR_CREDENTIAL_ID",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "d0cb2562-b299-43ff-9c8a-1be088d268f2",
+              "leftValue": "={{ $json['Reservation ID'] }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        448,
+        0
+      ],
+      "id": "035acfe7-dd06-4ec7-a4e5-2666e47eac66",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"success\": false,\n  \"message\": \"No reservation found for this phone number. Ask the caller to confirm the number they used for booking.\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        672,
+        96
+      ],
+      "id": "c164e377-8d53-4272-9334-cd22d374e533",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_SHEET_ID",
+          "mode": "list",
+          "cachedResultName": "Lahori Tikka House - Reservations"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "YOUR_SHEET_GID",
+          "mode": "list",
+          "cachedResultName": "Reservations"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Reservation ID": "={{ $json['Reservation ID'] }}",
+            "Date": "={{ $('Webhook').item.json.body.new_date || $json.Date }}",
+            "Time": "={{ $('Webhook').item.json.body.new_time || $json.Time }}",
+            "Guests": "={{ $('Webhook').item.json.body.new_guests || $json.Guests }}",
+            "Status": "={{ ($('Webhook').item.json.body.action === 'cancel' && !$('Webhook').item.json.body.new_date && !$('Webhook').item.json.body.new_time && !$('Webhook').item.json.body.new_guests) ? 'Cancelled' : 'Changed' }}",
+            "Notes": "=Updated by Ayesha on {{ $now.setZone('Asia/Karachi').toFormat('yyyy-MM-dd HH:mm') }}"
+          },
+          "matchingColumns": [
+            "Reservation ID"
+          ],
+          "schema": [
+            {
+              "id": "Reservation ID",
+              "displayName": "Reservation ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Created At",
+              "displayName": "Created At",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Customer Name",
+              "displayName": "Customer Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Phone",
+              "displayName": "Phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Date",
+              "displayName": "Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Time",
+              "displayName": "Time",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Guests",
+              "displayName": "Guests",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Seating",
+              "displayName": "Seating",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Special Request",
+              "displayName": "Special Request",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Notes",
+              "displayName": "Notes",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        672,
+        -96
+      ],
+      "id": "0806cb31-196a-4638-b2fe-ba9f586e31b4",
+      "name": "Update row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "YOUR_CREDENTIAL_ID",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"success\": true,\n  \"reservation_id\": \"{{ $json['Reservation ID'] }}\",\n  \"status\": \"{{ $json.Status }}\",\n  \"date\": \"{{ $json.Date }}\",\n  \"time\": \"{{ $json.Time }}\",\n  \"guests\": \"{{ $json.Guests }}\",\n  \"message\": \"Reservation updated. Confirm the new details to the caller. If status is Cancelled, tell them the booking is cancelled. Do not call the tool again.\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        896,
+        -96
+      ],
+      "id": "ae4df9c5-855a-4334-a563-a9b93abac0b1",
+      "name": "Respond to Webhook1"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "61d17d4b-9980-4f15-8207-e32c67d4b776",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "nodeGroups": [],
+  "id": "YfQsJ3fCFAA5PB4V",
+  "tags": []
+}
