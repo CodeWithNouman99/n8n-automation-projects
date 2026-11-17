@@ -24,6 +24,7 @@ Every workflow is built to handle the full lifecycle of a process — triggers, 
 | Project | Problem Solved | Stack |
 |---|---|---|
 | 🩺 **[WhatsApp Doctor Appointment Bot](./whatsapp-doctor-appointment)** | Clinics lose time on calls and manual booking. Patients book, reschedule and cancel appointments directly on WhatsApp — with Stripe payments, automatic refunds and daily reminders. | n8n · WhatsApp Cloud API · Gemini · Google Sheets · Stripe |
+| 🎙️ **[TableTalk AI](./tabletalk-ai)** | Restaurants miss calls at peak hours and bookings live in a notebook. An ElevenLabs voice receptionist answers in Urdu and English, books, changes and cancels tables, and saves every booking live to Google Sheets through n8n. | ElevenLabs · n8n · Google Sheets · Webhooks |
 |  **[Client Onboarding Automation](./client-onboarding-automation)** | Onboarding a new client takes hours of repetitive setup. One form submission provisions a Drive workspace, Slack channel, welcome email, kickoff call and a client log for the admin dashboard. | n8n · Webhook · Google Sheets · Drive · Slack · Gmail · Calendar |
 |  **[DevBuddy](./devBuddy)** | New developers get stuck and seniors lose time answering repeat questions. An AI onboarding buddy sends a WhatsApp welcome, one task a day, answers from company docs, raises stuck alerts and sends a weekly manager report. | n8n · WhatsApp Cloud API · Gemini · Google Workspace |
 |  **[AI Job Hunter](./ai-job-hunter)** | Job hunting means hours of searching and rewriting cover letters. Finds jobs, matches them with my CV using RAG, writes tailored cover letters and tracks applications. 🚧 *Work in progress* | n8n · Gemini · Supabase · WhatsApp Cloud API |
@@ -37,6 +38,12 @@ Every workflow is built to handle the full lifecycle of a process — triggers, 
 - **Stripe** integration for payments and automated refunds on cancellation
 - Scheduled **daily reminders** to reduce no-shows
 - Google Sheets as a lightweight appointment database
+
+### TableTalk AI
+- **Voice AI agent** (ElevenLabs) that talks to callers in Urdu and English
+- Two **webhook tools** connect the agent to n8n: one books, one changes or cancels
+- Answers menu, timing and parking questions from a **knowledge base (RAG)**
+- **Safety check** in n8n stops a booking from being cancelled by mistake
 
 ### Client Onboarding Automation
 - **Single trigger, multi-system execution** — one webhook fans out across 6 services
@@ -103,6 +110,16 @@ n8n-automation-projects/
 │   ├── README.md
 │   └── screenshots/
 │
+├── tabletalk-ai/
+│   ├── workflows/
+│   │   ├── book-reservation.json     # New booking → Google Sheets
+│   │   └── update-reservation.json   # Change / cancel by phone
+│   ├── elevenlabs/
+│   │   ├── system-prompt.md          # Agent prompt and guardrails
+│   │   ├── tools.md                  # Webhook tool definitions
+│   │   └── knowledge-base.txt        # Restaurant info for RAG
+│   └── README.md
+│
 ├── client-onboarding-automation/
 │   ├── workflow.json
 │   ├── README.md
@@ -119,7 +136,7 @@ n8n-automation-projects/
 
 ## What's Next
 
-More workflows are being added — including RAG-based knowledge agents and multi-agent systems. ⭐ **Star the repo** to follow along.
+More workflows are being added — including RAG-based knowledge agents and multi-agent systems. Voice agents are now part of the repo too, starting with TableTalk AI. ⭐ **Star the repo** to follow along.
 
 ---
 
